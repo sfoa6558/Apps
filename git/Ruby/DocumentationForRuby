@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-c = "Geico"
+bc = "Geico"
 c.replace "Enova"
 
 puts c
