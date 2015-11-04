@@ -18,7 +18,7 @@ class DataRetrieval
   def initialize(csv)
      @eis_data = [ ]
      @nc_data = [ ] 
-     delete_contents(csv)
+    # delete_contents(csv)
      parse(csv)
   end
 

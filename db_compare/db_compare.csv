@@ -1,0 +1,2 @@
+                 RESULT 
+select count(distinct loan_id) from nc_reporting.installments_test where installment_due_date <= '2015-10-23'|select count(distinct loan_id) from installments_fact_materialized where installment_due_date <='2015-10-23'

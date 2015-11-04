@@ -18,13 +18,13 @@ class DataRetrieval
      @eis_data = [ ]
      @nc_data = [ ] 
      login_credentials 
-     delete_contents(csv)
+     connection_credentials
+     delete_contents('db_compare.out')
      parse(csv)
   end
 
   def retrieve_data(query_string,conn)
        connection  =  conn_data(conn)
-      # puts connection
        connection.exec(query_string) do |result|
          result.each do |row|
            @eis_data << row if conn[:host] == 'eis_a-oak.enova.com' 
@@ -32,6 +32,7 @@ class DataRetrieval
          end
        end
      # connection.close 
+ 
   end 
   
   def compare_data(nc,eis,queries)
@@ -45,7 +46,9 @@ class DataRetrieval
       query =  query_list.to_s.split('|')
       nc_query  =   query[0]
       eis_query = query[1]
+      
       nc  =  nc_query.to_s
+      puts nc
       eis  =   eis_query.to_s 
       output_data(nc,eis,difference)
  end
@@ -61,8 +64,8 @@ class DataRetrieval
      db_out.close
  end 
  
- def delete_contents(csv)
-     File.truncate(csv,0)
+ def delete_contents(file)
+     File.truncate(file,0)
  end
  
   def parse(csv)
@@ -71,8 +74,7 @@ class DataRetrieval
                  row.to_s.split('|').each do |query|
                      retrieve_data(query,@eis)  if  query.to_s.include? "installments_fact_materialized"
                      retrieve_data(query,@nc)   if  query.to_s.include? "nc_reporting.installments"
-                 end
-               
+                 end 
                  compare_data(@eis_data,@nc_data,queries)
        end  
   end  
@@ -89,9 +91,12 @@ class DataRetrieval
 
  private
     def conn_data(conn)
+       begin
         PG.connect(conn)
-    end
-
+       rescue Exception => e
+          puts #{e.inspect}
+       end  
+  end
 
 end
 #Output a table of connections to the DB
