@@ -1,0 +1,76 @@
+require 'pry'
+# finds a box image
+class BoxImage
+  attr_accessor :my_image, :no_box, :counter, :my_array
+  def initialize(image)
+    @my_image = image
+    @my_array = []
+    @counter = 0
+  end
+
+  def find_boxes(num_column = 2)
+    @my_image.each.with_index do |coordinates, row_index|
+      coordinates.each.with_index do |item, col_index|
+      change_counter(item)
+      if @counter == num_column
+        if check_next_row(row_index, col_index, num_column)
+           fetch_coordinates(row_index, col_index, num_column)
+           @counter = 0
+         end
+        end
+     end
+    end
+    print_coordinates @my_array
+  end
+
+  def change_counter(item)
+    if item == 0
+      @counter += 1
+    else
+      @counter = 0
+    end
+  end
+
+  def check_next_row(row_index, col_index, num_col)
+    check_next = true
+    next_row = row_index + 1
+    if row_index != 7
+      for i in 0..num_col - 1
+        if @my_image[next_row][col_index - i] != 0
+          check_next = false
+        end
+      end
+    end
+    check_next
+  end
+
+  def fetch_coordinates(row_index, col_index, num_col)
+     i = col_index + 1 - num_col
+     next_row = row_index + 1
+     if row_index != 7
+       @my_array << [[row_index, i], [row_index, col_index], [next_row, i], [next_row, col_index]]
+     end
+  end
+
+  def check_pixel_space
+  end
+
+  def print_coordinates(coordinates_array)
+     coordinates_array.each do |coordinate|
+      p coordinate
+      end
+  end
+ end
+ image = [
+  [1, 1, 1, 1, 1, 1, 1],
+  [0, 0, 0, 1, 0, 0, 1],
+  [1, 1, 1, 1, 0, 0, 1],
+  [0, 0, 0, 1, 1, 1, 1],
+  [0, 0, 0, 1, 1, 1, 1],
+  [1, 1, 1, 0, 0, 0, 1],
+  [1, 1, 1, 0, 0, 0, 1],
+  [1, 1, 1, 0, 0, 0, 1]
+]
+
+  box_image = BoxImage.new(image)
+  box_image.find_boxes
