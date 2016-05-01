@@ -1,4 +1,7 @@
-
+=begin
+This  is my solution using ruby. It is composed of one class, the BoxImage class. The method that does all the magic is the find_boxes method. It has a default parameter of two, so it will look for squares(which happen to be rectangles) which have two columns of zeroes.  If you pass in a parameter of three, it finds rectangles with three columns of zeroes. It always assumes the rectangles have two rows, which is a weakness in the algorithm as a rectangle could have more than two rows. I also tried to create a method that would raise an exception if the rectangles are not seperated by more than one pixel. I could not get this working in the time constraints given. The time complexity is O(n3). I had problems copying the raised three here for some reason. There is technically only one loop that depends on the input. That is the loop in check_next_row which is in find_boxes. However, the speed of the program depends on the size of the image array. I chose to store that in an instance variable which I initialize in the initialize method. There are two nested loops in
+find_boxes which are dependent on the size of this array. That is why I said O(n3), for three nested loops, even though the image array is not passed into the find_boxes method. I pass the image array as a paramter to def initialize which creates an instance of BoxImage. 
+=end
 # finds a box image
 class BoxImage
   attr_accessor :my_image, :counter, :my_array
@@ -8,7 +11,7 @@ class BoxImage
     @counter = 0
   end
 
-  def find_boxes(num_column = 3)
+  def find_boxes(num_column = 2)
     @my_image.each.with_index do |coordinates, row_index|
       coordinates.each.with_index do |item, col_index|
       change_counter(item)
