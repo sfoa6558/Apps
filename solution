@@ -1,7 +1,7 @@
-require 'pry'
+
 # finds a box image
 class BoxImage
-  attr_accessor :my_image, :no_box, :counter, :my_array
+  attr_accessor :my_image, :counter, :my_array
   def initialize(image)
     @my_image = image
     @my_array = []
@@ -13,8 +13,8 @@ class BoxImage
       coordinates.each.with_index do |item, col_index|
       change_counter(item)
       if @counter == num_column
-        if check_next_row(row_index, col_index, num_column)
-           fetch_coordinates(row_index, col_index, num_column)
+        if check_next_row(col_index,row_index,num_column)
+           fetch_coordinates(col_index,row_index, num_column)
            @counter = 0
          end
         end
@@ -32,7 +32,7 @@ class BoxImage
     end
   end
 
-  def check_next_row(row_index, col_index, num_col)
+  def check_next_row(col_index,row_index, num_col)
     check_next = true
     next_row = row_index + 1
     if row_index != 7
@@ -54,7 +54,6 @@ class BoxImage
   end
   
   def compare_array(end_coordinate_array,begin_coordinate_array)
-     # p begin_coordinate_array[1][0]
       if begin_coordinate_array[1][0] == end_coordinate_array[0][0]
          if end_coordinate_array[0][1] - begin_coordinate_array[1][1] == 1
           raise RuntimeError, "The rectangle with the coordinates row: #{end_coordinate_array[0][0]} and column: #{end_coordinate_array[0][1]} is not separated by a pixel"
@@ -62,32 +61,30 @@ class BoxImage
      end
   end
 
-  def fetch_coordinates(row_index, col_index, num_col)
+  def fetch_coordinates(col_index,row_index,num_col)
      i = col_index + 1 - num_col
      next_row = row_index + 1
      if row_index != 7
-       @my_array << [[row_index, i], [row_index, col_index], [next_row, i], [next_row, col_index]]
+       @my_array << [[i , row_index], [col_index , row_index], [i, next_row], [col_index, next_row]]
      end
   end
   
   def print_coordinates(coordinates_array)
-     # binding.pry
      coordinates_array.each do |coordinate|
-      # binding.pry
        puts "coordinates for rectangle: #{coordinate}"
       end
   end
  end
  image = [
+   [1, 1, 1, 1, 1, 1, 1],
   [1, 1, 1, 1, 1, 1, 1],
-  [0, 0, 0, 1, 1, 1, 1],
-  [0, 0, 0, 0, 0, 0, 1],
-  [0, 0, 0, 1, 1, 1, 1],
-  [0, 0, 0, 1, 1, 1, 1],
-  [0, 0, 0, 0, 0, 0, 1],
-  [0, 0, 0, 0, 0, 0, 1],
-  [0, 0, 0, 0, 0, 0, 1]
+  [1, 1, 1, 0, 0, 0, 1],
+  [1, 0, 1, 0, 0, 0, 1],
+  [1, 0, 1, 1, 1, 1, 1],
+  [1, 0, 1, 0, 0, 1, 1],
+  [1, 1, 1, 0, 0, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1],
 ]
 
   box_image = BoxImage.new(image)
-  box_image.find_boxes 3
+  box_image.find_boxes 2
